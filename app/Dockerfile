@@ -1,58 +1,46 @@
-FROM alpine:latest
+# this line of code will get the latest images of "ubuntu" from docker hub
+# to be used as the base image for the creation of the app image
+FROM ubuntu:18.04
 
-RUN apk add --no-cache python3 && \
-    apk add --no-cache py3-pip
+# the line of code will run the command 
+RUN apt update && \
+    apt install python3 -y && \
+    apt install python3-pip -y && \
+    adduser adhoc-user
 
-WORKDIR /app
+# this line of code will config the working dir of the container to be "/app/scr/"
+WORKDIR /app/src/
 
-COPY ./src /app
+# this line of code will copy the contents of the PWD to the dir in the container
+# called "/app/scr" which is the container's working dir
+COPY ./src/requirements.txt /app/src/
 
-RUN pip3 --no-cache-dir install -r requirements.txt 
-RUN export FLASK_APP=server
-RUN export FLASK_RUN_PORT=8000                                                                             
+COPY ./src/server.py /app/src/
 
-# EXPOSE 8000
+# this line of code will install all the python modules listed in the file 
+# "requirements.txt"
+RUN pip3 --no-cache-dir install -r requirements.txt
 
+# this line of code will expose port "8000" on the container
+EXPOSE 8000
 
-# ENTRYPOINT  ["python3"]
+# this line of code will cause the container to enter into the python interpreter
+# by executing the command "python3"
 
-CMD ["flask run"]
+# this line of code also allows the container to run after it is created because it
+# will have the "python3" program running in the background
 
+# this line of code also makes the app on the container executable once the container
+# is launch
 
+# this line of code will run the container with the user adhoc-user
+USER adhoc-user
 
+# this line of code with start the container with the python3 interpreter
+ENTRYPOINT ["python3"]
 
+# this line of code will run the command "server.py" while the container is in the 
+# python interpreter
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# FROM python:3-alpine3.10
-
-# # RUN apt update && \
-# # apt install -y python3 && \
-# # apt install -y python3-pip && \
-# # # pip3 install -r requirements.txt \
-# # # export FLASK_APP=server \ 
-# # mkdir /app && \
-# # apt clean && apt autoclean && apt autoremove
-
-# WORKDIR /app
-
-# RUN pip install -r requirements.txt
-
-# EXPOSE 8000
-
-# # ENTRYPOINT [ "python" ]
-
-# CMD [ "python", "server.py" ]
+# this line of code is also an argument to the "ENTRYPOINT" command
+CMD ["server.py",  "debug=True", "port=8000", "host='0.0.0.0'"]
