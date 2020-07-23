@@ -1,0 +1,43 @@
+version: "3"
+services:
+#   nginx:
+#     container_name: containerize_nginx_1
+#     build: /home/glitch/Documents/adhoc-homework/restart_ubuntu_nginx/nginx/
+#     ports:
+#         - "80:80"
+#         # - "443:443"
+#     # command: ["nginx", "-g", "daemon off;"]
+#     volumes: 
+#         - /home/glitch/Documents/dockerRelated/udemy_docker_mastery/secure_web_server/reverse_proxy/volumes/logs/nginx/:/var/logs/nginx
+#         - /home/glitch/Documents/dockerRelated/udemy_docker_mastery/secure_web_server/reverse_proxy/volumes/nginx/conf.d:/etc/nginx/conf.d/
+
+
+
+    
+
+
+    back_end_server:
+        build: /home/glitch/Documents/adhoc-homework/restart_ubuntu_nginx/app/
+        volumes: 
+            - /home/glitch/Documents/adhoc-homework/restart_ubuntu_nginx/app/src:/app
+        WORKDIR: /app
+
+        RUN: pip install -r requirements.txt
+        
+        EXPOSE: 8000
+       
+        # networks: 
+        #     common_net:
+        #         ipv4_address: 172.26.0.3
+        #     # you may set custom IP addresses
+        #     front:
+        #         ipv4_address: 172.26.0.3 
+        #         # ipv6_address: "2001:3984:3989::10"
+        #     # - back
+            
+# networks:
+#     common_net:
+#         ipam:
+#             driver: default
+#             config:
+#                 - subnet: 172.26.0.0/16
